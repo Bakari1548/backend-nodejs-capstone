@@ -15,7 +15,7 @@ app.use(expressPino);
 
 // Define the sentiment analysis route
 // Task 3: create the POST /sentiment analysis
-app.use('/sentiment', async (req, res) => {
+app.post('/sentiment', async (req, res) => {
 
     // Task 4: extract the sentence parameter
     const { sentence } = req.query;
@@ -38,12 +38,10 @@ app.use('/sentiment', async (req, res) => {
         let sentiment = "neutral";
 
         // Task 5: set sentiment to negative or positive based on score rules
-        if(analysisResult < 0){
+        if (analysisResult < 0) {
             sentiment = "negative";
-        }else if(analysisResult >= 0 && analysisResult >= 0.33) {
-            sentiment = "neutre"
-        }else{
-            sentiment ="positive"
+        } else if (analysisResult > 0.33) {
+            sentiment = "positive";
         }
 
         // Logging the result
@@ -54,7 +52,7 @@ app.use('/sentiment', async (req, res) => {
     } catch (error) {
         logger.error(`Error performing sentiment analysis: ${error}`);
         // Task 7: if there is an error, return a HTTP code of 500 and the json {'message': 'Error performing sentiment analysis'}
-        error.status(500).json();
+        res.status(500).json({ message: 'Error performing sentiment analysis' });
     }
 });
 
